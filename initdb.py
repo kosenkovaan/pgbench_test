@@ -3,52 +3,61 @@ import subprocess
 
 class Test():
 
-    def __init__(self, bin_path, data_directory_path, wal_segsize, conn_count, tran_count):
+    def __init__(self, bin_path, data_directory_path, wal_segment_size, connect_count, transaction_count):
         self.bin_path = bin_path
         self.data_directory_path = data_directory_path
-        self.wal_segsize = wal_segsize
-        self.conn_count = conn_count
-        self.tran_count = tran_count
+        self.wal_segment_size = wal_segment_size
+        self.connect_count = connect_count
+        self.transaction_count = transaction_count
         
     def initdb(self):
-        if os.path.isdir(self.data_directory_path + 'data' + self.wal_segsize):
-            subprocess.call(['sudo', 'rm', '-r', self.data_directory_path + 'data' + self.wal_segsize])
+        if os.path.isdir(self.data_directory_path + 'data' + self.wal_segment_size):
+            subprocess.call(['sudo', 'rm', '-r', self.data_directory_path + 'data' + self.wal_segment_size])
 
-        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'initdb', '--wal-segsize=' + self.wal_segsize, '-D', self.data_directory_path + 'data' + self.wal_segsize])
+        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'initdb', '--wal-segsize=' + self.wal_segment_size, '-D', self.data_directory_path + 'data' + self.wal_segment_size])
+
+    def change_max_connections(self, text_to_add, file_name):
+        subprocess.call([f'echo "{text_to_add}" | sudo -u postgres tee -a {file_name}'], shell=True)
 
     def start_server(self):
-        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pg_ctl', '-D', self.data_directory_path + 'data' + self.wal_segsize, '-l', self.data_directory_path + 'log' + self.wal_segsize, 'start'])
+        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pg_ctl', '-D', self.data_directory_path + 'data' + self.wal_segment_size, '-l', self.data_directory_path + 'log' + self.wal_segment_size, 'start'])
 
     def create_database(self):
         subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'createdb', 'benchmark'])
         
     def benchmark(self):
         subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-i', 'benchmark'])
-        with open('test' + self.wal_segsize + '.txt', 'a') as outputfile:
-            subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-t', self.tran_count, '-c', self.conn_count, 'benchmark'], stdout=outputfile)
+        with open('test' + self.wal_segment_size + '.txt', 'a') as outputfile:
+            subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-t', self.transaction_count, '-c', self.connect_count, 'benchmark'], stdout=outputfile)
 
     def stop_server(self):
-        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pg_ctl', '-D', self.data_directory_path + 'data' + self.wal_segsize, '-l', self.data_directory_path + 'log' + self.wal_segsize, 'stop'])
+        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pg_ctl', '-D', self.data_directory_path + 'data' + self.wal_segment_size, '-l', self.data_directory_path + 'log' + self.wal_segment_size, 'stop'])
 
-def test_case(bin_path, data_directory_path, wal_segment_size, tran_count):
-    connect_count = ['2', '4', '8']
+def test_case(bin_path, data_directory_path, wal_segment_size, transaction_count):
+    connect_count = ['128']
 
     for conn in connect_count:
-        t = str(round(tran_count / int(conn)))
-        for j in range(3):
-            test = Test(bin_path, data_directory_path, wal_segment_size, conn, t)
+        tran = str(round(transaction_count / int(conn)))
+        
+        for j in range(1):
+            test = Test(bin_path, data_directory_path, wal_segment_size, conn, tran)
             test.initdb()
+            if int(conn) > 100:
+                text_to_add = "max_connections = 1000"
+                file_name = data_directory_path + 'data' + wal_segment_size + '/postgresql.conf'
+                test.change_max_connections(text_to_add, file_name)
             test.start_server()
             test.create_database()
             test.benchmark()
             test.stop_server()
+
             del test
 
 def main():
     bin_path = '/usr/lib/postgresql/16/bin/'
     data_directory_path = '/usr/local/pgsql/'
-    wal_segment_size = ['16', '32']
-    transaction_count = 100
+    wal_segment_size = ['16']
+    transaction_count = 1000
  
     for wss in wal_segment_size:
         test_case(bin_path, data_directory_path, wss, transaction_count)
