@@ -1,4 +1,4 @@
-wal_segment_size = ['16', '32']
+wal_segment_size = ['16', '32', '64', '128', '256', '512', '1024']
 s = []
 result = {}
 

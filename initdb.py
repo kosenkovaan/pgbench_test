@@ -33,13 +33,13 @@ class Test():
     def stop_server(self):
         subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pg_ctl', '-D', self.data_directory_path + 'data' + self.wal_segment_size, '-l', self.data_directory_path + 'log' + self.wal_segment_size, 'stop'])
 
-def test_case(bin_path, data_directory_path, wal_segment_size, transaction_count):
-    connect_count = ['128']
+def test_case(bin_path, data_directory_path, wal_segment_size, transaction_count, tests_count):
+    connect_count = ['2', '4', '8', '16', '32', '64', '128', '256', '512']
 
     for conn in connect_count:
         tran = str(round(transaction_count / int(conn)))
         
-        for j in range(1):
+        for j in range(tests_count):
             test = Test(bin_path, data_directory_path, wal_segment_size, conn, tran)
             test.initdb()
             if int(conn) > 100:
@@ -56,11 +56,12 @@ def test_case(bin_path, data_directory_path, wal_segment_size, transaction_count
 def main():
     bin_path = '/usr/lib/postgresql/16/bin/'
     data_directory_path = '/usr/local/pgsql/'
-    wal_segment_size = ['16']
+    wal_segment_size = ['16', '32', '64', '128', '256', '512', '1024']
     transaction_count = 1000
+    tests_count = 2
  
     for wss in wal_segment_size:
-        test_case(bin_path, data_directory_path, wss, transaction_count)
+        test_case(bin_path, data_directory_path, wss, transaction_count, tests_count)
 
 if __name__ == "__main__":
     main()
