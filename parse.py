@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 wal_segment_size = ['16', '32', '64', '128', '256', '512', '1024']
 s = []
 result = {}
@@ -58,3 +60,31 @@ for wss, client_data in result.items():
             fin_table[wss][conn_count] = fin_table[wss][conn_count] + cur_run['tps']
         fin_table[wss][conn_count] = fin_table[wss][conn_count] / len(run_data)
         print('wss: ' + wss + "; conn_count: ", conn_count, "; avg_tps: ", fin_table[wss][conn_count], "; run_count: ", len(run_data))
+
+def plot_graph(result, fin_table, wal_segment_size):
+    for wss, client_data in result.items():
+        if wss == wal_segment_size:
+            plot_conn = []
+            plot_tps =[]
+            for conn_count, run_data in client_data.items():
+                plot_conn.append(conn_count)
+                plot_tps.append(fin_table[wss][conn_count])
+
+    figure = plt.figure(figsize=(8, 6))
+    plt.grid()
+    plt.plot(range(len(plot_conn)), plot_tps)
+    plt.xticks(range(len(plot_conn)), plot_conn)
+    plt.xlabel('connect count')
+    plt.title('wal_segment_size =' + wal_segment_size)
+
+    return figure
+    
+    
+plot_wss_16 = plot_graph(result=result, fin_table=fin_table, wal_segment_size='16') 
+plot_wss_32 = plot_graph(result=result, fin_table=fin_table, wal_segment_size='32') 
+plot_wss_64 = plot_graph(result=result, fin_table=fin_table, wal_segment_size='64') 
+plot_wss_128 = plot_graph(result=result, fin_table=fin_table, wal_segment_size='128') 
+plot_wss_256 = plot_graph(result=result, fin_table=fin_table, wal_segment_size='256') 
+plot_wss_512 = plot_graph(result=result, fin_table=fin_table, wal_segment_size='512') 
+plot_wss_1024 = plot_graph(result=result, fin_table=fin_table, wal_segment_size='1024') 
+plt.show()
