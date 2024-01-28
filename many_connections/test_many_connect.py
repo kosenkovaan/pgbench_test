@@ -57,8 +57,8 @@ def main():
     bin_path = '/usr/lib/postgresql/16/bin/'
     data_directory_path = '/usr/local/pgsql/'
     wal_segment_size = ['16', '32', '64', '128', '256', '512', '1024']
-    transaction_count = 1000
-    tests_count = 2
+    transaction_count = 100
+    tests_count = 1
  
     for wss in wal_segment_size:
         test_case(bin_path, data_directory_path, wss, transaction_count, tests_count)

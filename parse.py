@@ -1,10 +1,12 @@
+
+
 wal_segment_size = ['16', '32', '64', '128', '256', '512', '1024']
 s = []
 result = {}
 
 for wss in wal_segment_size:
     result[wss] = {}
-    with open('test' + wss + '.txt', 'r') as outputfile:
+    with open('many_conn_test' + wss + '.txt', 'r') as outputfile:
         s.append(outputfile.readlines())
 
 cur_file = 0
