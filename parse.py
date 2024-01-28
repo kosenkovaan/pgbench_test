@@ -1,15 +1,19 @@
-
+import matplotlib.pyplot as plt
+import numpy as np
 
 wal_segment_size = ['16', '32', '64', '128', '256', '512', '1024']
-s = []
+connect_count = np.array([2, 4, 8, 16, 32, 64, 128, 256, 512])
+cur_file = 0
+fin_table = {}
 result = {}
+s = []
+
+file_path = './many_connections/many_conn_test'
 
 for wss in wal_segment_size:
     result[wss] = {}
-    with open('many_conn_test' + wss + '.txt', 'r') as outputfile:
+    with open(file_path + wss + '.txt', 'r') as outputfile:
         s.append(outputfile.readlines())
-
-cur_file = 0
 
 for file in s:
     local_result = {}
@@ -47,8 +51,6 @@ for file in s:
             result[cur_val_seg][number_of_clients][cur_len - 1][field_name] = value
     cur_file = cur_file + 1
 
-fin_table = {}
-
 for wss in wal_segment_size:
     fin_table[wss] = {}
 
@@ -60,3 +62,29 @@ for wss, client_data in result.items():
             fin_table[wss][conn_count] = fin_table[wss][conn_count] + cur_run['tps']
         fin_table[wss][conn_count] = fin_table[wss][conn_count] / len(run_data)
         print('wss: ' + wss + "; conn_count: ", conn_count, "; avg_tps: ", fin_table[wss][conn_count], "; run_count: ", len(run_data))
+
+def return_graph_data(result, fin_table, wal_segment_size):
+    for wss, client_data in result.items():
+        if wss == wal_segment_size:
+            plot_tps = []
+            for conn_count, run_data in client_data.items():
+                plot_tps.append(fin_table[wss][conn_count])
+
+    return plot_tps   
+
+tps_data_wss_16 = return_graph_data(result=result, fin_table=fin_table, wal_segment_size='16') 
+tps_data_wss_32 = return_graph_data(result=result, fin_table=fin_table, wal_segment_size='32') 
+tps_data_wss_64 = return_graph_data(result=result, fin_table=fin_table, wal_segment_size='64') 
+tps_data_wss_128 = return_graph_data(result=result, fin_table=fin_table, wal_segment_size='128') 
+tps_data_wss_256 = return_graph_data(result=result, fin_table=fin_table, wal_segment_size='256') 
+tps_data_wss_512 = return_graph_data(result=result, fin_table=fin_table, wal_segment_size='512') 
+tps_data_wss_1024 = return_graph_data(result=result, fin_table=fin_table, wal_segment_size='1024')  
+
+figure = plt.figure(figsize=(8, 6))
+plt.grid()
+plt.plot(range(len(connect_count)), np.c_[tps_data_wss_16, tps_data_wss_32, tps_data_wss_64, tps_data_wss_128, tps_data_wss_256, tps_data_wss_512, tps_data_wss_1024],
+                                    label=['wal_segsize=16', 'wal_segsize=32', 'wal_segsize=64', 'wal_segsize=128', 'wal_segsize=256', 'wal_segsize=512', 'wal_segsize=1024'])
+plt.legend()
+plt.xticks(range(len(connect_count)), connect_count)
+plt.xlabel('connect count')
+plt.show() 
