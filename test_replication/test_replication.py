@@ -27,7 +27,7 @@ class Test():
         
     def benchmark(self):
         subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-i', 'benchmark'])
-        with open('./many_connections/many_connections_data/many_conn_test' + self.wal_segment_size + '.txt', 'a') as outputfile:
+        with open('./many_connections/many_conn_test' + self.wal_segment_size + '.txt', 'a') as outputfile:
             subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-t', self.transaction_count, '-c', self.connect_count, 'benchmark'], stdout=outputfile)
 
     def stop_server(self):

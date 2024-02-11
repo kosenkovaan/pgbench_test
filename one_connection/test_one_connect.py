@@ -24,7 +24,7 @@ class Test():
         
     def benchmark(self):
         subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-i', 'benchmark'])
-        with open('one_conn_test' + self.wal_segment_size + '.txt', 'a') as outputfile:
+        with open('./one_connection/one_connection_data/one_conn_test' + self.wal_segment_size + '.txt', 'a') as outputfile:
             subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-t', self.transaction_count, '-c', self.connect_count, 'benchmark'], stdout=outputfile)
 
     def stop_server(self):
@@ -50,7 +50,7 @@ def main():
     bin_path = '/usr/lib/postgresql/16/bin/'
     data_directory_path = '/usr/local/pgsql/'
     wal_segment_size = ['1', '2', '4', '8', '16', '32', '64', '128', '256', '512', '1024']
-    transaction_count = 100
+    transaction_count = 10
     tests_count = 1
  
     for wss in wal_segment_size:
