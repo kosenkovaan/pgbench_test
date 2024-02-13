@@ -54,10 +54,17 @@ def test_case(bin_path, data_directory_path, wal_segment_size, transaction_count
             del test
 
 def main():
+
+    # Path to PostgreSQL
     bin_path = '/usr/lib/postgresql/16/bin/'
+    # Cluster data path
     data_directory_path = '/usr/local/pgsql/'
+
+    # List of WAL sizes, one element of list - one test case
     wal_segment_size = ['16', '32', '64', '128', '256', '512', '1024']
+    # Total transaction count for all test cases
     transaction_count = 1000
+    # Total test count for one case
     tests_count = 1
  
     for wss in wal_segment_size:

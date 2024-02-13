@@ -12,31 +12,34 @@ class Test():
         
     def initdb(self):
         if os.path.isdir(self.data_directory_path + 'data' + self.wal_segment_size):
-            subprocess.call(['sudo', 'rm', '-r', self.data_directory_path + 'data' + self.wal_segment_size])
+            subprocess.call(['sudo', '-i', 'rm', '-r', self.data_directory_path + 'data' + self.wal_segment_size])
 
-        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'initdb', '--wal-segsize=' + self.wal_segment_size, '-D', self.data_directory_path + 'data' + self.wal_segment_size])
+        subprocess.call(['sudo', '-i', '-u', 'postgres', self.bin_path + 'initdb', '--wal-segsize=' + self.wal_segment_size, '-D', self.data_directory_path + 'data' + self.wal_segment_size])
 
     def start_server(self):
-        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pg_ctl', '-D', self.data_directory_path + 'data' + self.wal_segment_size, '-l', self.data_directory_path + 'log' + self.wal_segment_size, 'start'])
+        subprocess.call(['sudo', '-i', '-u', 'postgres', self.bin_path + 'pg_ctl', '-D', self.data_directory_path + 'data' + self.wal_segment_size, '-l', self.data_directory_path + 'log' + self.wal_segment_size, 'start'])
 
     def create_database(self):
-        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'createdb', 'benchmark'])
+        subprocess.call(['sudo', '-i', '-u', 'postgres', self.bin_path + 'createdb', 'benchmark'])
         
     def benchmark(self):
-        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-i', 'benchmark'])
-        with open('./one_connection/one_connection_data/one_conn_test' + self.wal_segment_size + '.txt', 'a') as outputfile:
-            subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-t', self.transaction_count, '-c', self.connect_count, 'benchmark'], stdout=outputfile)
+        subprocess.call(['sudo', '-i', '-u', 'postgres', self.bin_path + 'pgbench', '-i', 'benchmark'])
+        with open('./one_connection/data/one_conn_test' + self.wal_segment_size + '.txt', 'a') as outputfile:
+            subprocess.call(['sudo', '-i', '-u', 'postgres', self.bin_path + 'pgbench', '-t', self.transaction_count, '-c', self.connect_count, 'benchmark'], stdout=outputfile)
 
     def stop_server(self):
-        subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pg_ctl', '-D', self.data_directory_path + 'data' + self.wal_segment_size, '-l', self.data_directory_path + 'log' + self.wal_segment_size, 'stop'])
+        subprocess.call(['sudo', '-i', '-u', 'postgres', self.bin_path + 'pg_ctl', '-D', self.data_directory_path + 'data' + self.wal_segment_size, '-l', self.data_directory_path + 'log' + self.wal_segment_size, 'stop'])
 
-def test_case(bin_path, data_directory_path, wal_segment_size, transaction_count, tests_count):
+def test_case(bin_path, data_directory_path, wal_segment_size, transaction_count, test_count):
+    
+    # List of cases by number of connections
     connect_count = ['1']
-
+ 
     for conn in connect_count:
+        # Find number of transaction per connection
         tran = str(round(transaction_count / int(conn)))
         
-        for j in range(tests_count):
+        for j in range(test_count):
             test = Test(bin_path, data_directory_path, wal_segment_size, conn, tran)
             test.initdb()
             test.start_server()
@@ -47,14 +50,21 @@ def test_case(bin_path, data_directory_path, wal_segment_size, transaction_count
             del test
 
 def main():
+    
+    # Path to PostgreSQL
     bin_path = '/usr/lib/postgresql/16/bin/'
+    # Cluster data path
     data_directory_path = '/usr/local/pgsql/'
+
+    # List of WAL sizes, one element of list - one test case
     wal_segment_size = ['1', '2', '4', '8', '16', '32', '64', '128', '256', '512', '1024']
-    transaction_count = 10
-    tests_count = 1
+    # Total transaction count for all test cases
+    transaction_count = 1000000
+    # Total test count for one case
+    test_count = 1
  
     for wss in wal_segment_size:
-        test_case(bin_path, data_directory_path, wss, transaction_count, tests_count)
+        test_case(bin_path, data_directory_path, wss, transaction_count, test_count)
 
 if __name__ == "__main__":
     main()
