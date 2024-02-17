@@ -23,6 +23,7 @@ class Test():
         subprocess.call(['sudo', '-i', '-u', 'postgres', self.bin_path + 'createdb', 'benchmark'])
         
     def benchmark(self):
+        subprocess.call(['sudo', 'i', '-u', 'postgres', self.bin_path + 'psql', '-c', 'CHECKPOINT'])
         subprocess.call(['sudo', '-i', '-u', 'postgres', self.bin_path + 'pgbench', '-i', 'benchmark'])
         with open('./one_connection/data/one_conn_test' + self.wal_segment_size + '.txt', 'a') as outputfile:
             subprocess.call(['sudo', '-i', '-u', 'postgres', self.bin_path + 'pgbench', '-t', self.transaction_count, '-c', self.connect_count, 'benchmark'], stdout=outputfile)
@@ -61,7 +62,7 @@ def main():
     # Total transaction count for all test cases
     transaction_count = 1000000
     # Total test count for one case
-    test_count = 1
+    test_count = 5
  
     for wss in wal_segment_size:
         test_case(bin_path, data_directory_path, wss, transaction_count, test_count)

@@ -24,3 +24,133 @@ number of failed transactions: 0 (0.000%)
 latency average = 1.928 ms
 initial connection time = 13.422 ms
 tps = 518.700935 (without initial connection time)
+pgbench (16.1 (Ubuntu 16.1-1.pgdg22.04+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000000
+number of transactions actually processed: 1000000/1000000
+number of failed transactions: 0 (0.000%)
+latency average = 1.199 ms
+initial connection time = 6.645 ms
+tps = 834.113406 (without initial connection time)
+pgbench (16.1 (Ubuntu 16.1-1.pgdg22.04+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000000
+number of transactions actually processed: 1000000/1000000
+number of failed transactions: 0 (0.000%)
+latency average = 1.147 ms
+initial connection time = 2.174 ms
+tps = 871.702844 (without initial connection time)
+pgbench (16.1 (Ubuntu 16.1-1.pgdg22.04+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000000
+number of transactions actually processed: 1000000/1000000
+number of failed transactions: 0 (0.000%)
+latency average = 1.139 ms
+initial connection time = 10.859 ms
+tps = 877.960472 (without initial connection time)
+pgbench (16.1 (Ubuntu 16.1-1.pgdg22.04+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000000
+number of transactions actually processed: 1000000/1000000
+number of failed transactions: 0 (0.000%)
+latency average = 1.255 ms
+initial connection time = 2.041 ms
+tps = 796.728147 (without initial connection time)
+pgbench (16.1 (Ubuntu 16.1-1.pgdg22.04+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000000
+number of transactions actually processed: 1000000/1000000
+number of failed transactions: 0 (0.000%)
+latency average = 1.196 ms
+initial connection time = 2.671 ms
+tps = 836.376286 (without initial connection time)
+pgbench (16.1 (Ubuntu 16.1-1.pgdg22.04+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000000
+number of transactions actually processed: 1000000/1000000
+number of failed transactions: 0 (0.000%)
+latency average = 1.249 ms
+initial connection time = 10.782 ms
+tps = 800.930540 (without initial connection time)
+pgbench (16.1 (Ubuntu 16.1-1.pgdg22.04+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000000
+number of transactions actually processed: 1000000/1000000
+number of failed transactions: 0 (0.000%)
+latency average = 1.243 ms
+initial connection time = 2.554 ms
+tps = 804.536727 (without initial connection time)
+pgbench (16.1 (Ubuntu 16.1-1.pgdg22.04+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000000
+number of transactions actually processed: 1000000/1000000
+number of failed transactions: 0 (0.000%)
+latency average = 1.268 ms
+initial connection time = 5.645 ms
+tps = 788.638121 (without initial connection time)
+pgbench (16.1 (Ubuntu 16.1-1.pgdg22.04+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000000
+number of transactions actually processed: 1000000/1000000
+number of failed transactions: 0 (0.000%)
+latency average = 1.262 ms
+initial connection time = 2.479 ms
+tps = 792.419820 (without initial connection time)
+pgbench (16.1 (Ubuntu 16.1-1.pgdg22.04+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: simple
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000000
+number of transactions actually processed: 1000000/1000000
+number of failed transactions: 0 (0.000%)
+latency average = 1.281 ms
+initial connection time = 3.423 ms
+tps = 780.882937 (without initial connection time)
