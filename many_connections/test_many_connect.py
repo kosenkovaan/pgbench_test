@@ -13,11 +13,14 @@ class Test():
     def initdb(self):
         if os.path.isdir(self.data_directory_path + 'data' + self.wal_segment_size):
             subprocess.call(['sudo', 'rm', '-r', self.data_directory_path + 'data' + self.wal_segment_size])
-
         subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'initdb', '--wal-segsize=' + self.wal_segment_size, '-D', self.data_directory_path + 'data' + self.wal_segment_size])
 
     def change_max_connections(self, text_to_add, file_name):
         subprocess.call([f'echo "{text_to_add}" | sudo -u postgres tee -a {file_name}'], shell=True)
+
+    def change_parameters(self, change_checkpoint_timeout, change_max_wal_size, file_name):
+        subprocess.call([f'echo "{change_checkpoint_timeout}" | sudo -u postgres tee -a {file_name}'], shell=True)
+        subprocess.call([f'echo "{change_max_wal_size}" | sudo -u postgres tee -a {file_name}'], shell=True)
 
     def start_server(self):
         subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pg_ctl', '-D', self.data_directory_path + 'data' + self.wal_segment_size, '-l', self.data_directory_path + 'log' + self.wal_segment_size, 'start'])
@@ -26,6 +29,7 @@ class Test():
         subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'createdb', 'benchmark'])
         
     def benchmark(self):
+        subprocess.call(['sudo', 'i', '-u', 'postgres', self.bin_path + 'psql', '-c', 'CHECKPOINT'])
         subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-i', 'benchmark'])
         with open('./many_connections/many_connections_data/many_conn_test' + self.wal_segment_size + '.txt', 'a') as outputfile:
             subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-t', self.transaction_count, '-c', self.connect_count, 'benchmark'], stdout=outputfile)
@@ -46,6 +50,11 @@ def test_case(bin_path, data_directory_path, wal_segment_size, transaction_count
                 text_to_add = "max_connections = 1000"
                 file_name = data_directory_path + 'data' + wal_segment_size + '/postgresql.conf'
                 test.change_max_connections(text_to_add, file_name)
+            # change checkpoint_timeout and max_wal_size
+            change_checkpoint_timeout = "checkpoint_timeout = 7200"
+            change_max_wal_size = "max_wal_size = 102400"
+            file_name = data_directory_path + 'data' + wal_segment_size + '/postgresql.conf'
+            test.change_parameters(change_checkpoint_timeout, change_max_wal_size, file_name)
             test.start_server()
             test.create_database()
             test.benchmark()
@@ -54,11 +63,17 @@ def test_case(bin_path, data_directory_path, wal_segment_size, transaction_count
             del test
 
 def main():
+    # Path to PostgreSQL
     bin_path = '/usr/lib/postgresql/16/bin/'
+    # Cluster data path
     data_directory_path = '/usr/local/pgsql/'
+
+    # List of WAL sizes, one element of list - one test case
     wal_segment_size = ['16', '32', '64', '128', '256', '512', '1024']
-    transaction_count = 1000
-    tests_count = 1
+    # Total transaction count for all test cases
+    transaction_count = 1000000
+    # Total test count for one case
+    tests_count = 15
  
     for wss in wal_segment_size:
         test_case(bin_path, data_directory_path, wss, transaction_count, tests_count)
