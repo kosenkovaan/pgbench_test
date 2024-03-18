@@ -50,17 +50,17 @@ def test_case(bin_path, data_directory_path, transaction_count, test_number, seg
         text_to_add = "max_connections = 1000"
         file_name = data_directory_path + 'data' + segment_size + '/postgresql.conf'
         test.change_max_connections(text_to_add, file_name)
-        change_checkpoint_timeout = "checkpoint_timeout = 7200"
-        change_max_wal_size = "max_wal_size = 102400"
-        file_name = data_directory_path + 'data' + segment_size + '/postgresql.conf'
-        test.change_parameters(change_checkpoint_timeout, change_max_wal_size, file_name)
-        test.kill_port()
-        test.start_server()
-        test.create_database()
-        test.benchmark()
-        test.stop_server()
+    change_checkpoint_timeout = "checkpoint_timeout = 7200"
+    change_max_wal_size = "max_wal_size = 102400"
+    file_name = data_directory_path + 'data' + segment_size + '/postgresql.conf'
+    test.change_parameters(change_checkpoint_timeout, change_max_wal_size, file_name)
+    test.kill_port()
+    test.start_server()
+    test.create_database()
+    test.benchmark()
+    test.stop_server()
         
-        del test
+    del test
     #pass
 
 def logging(test, segment_size, connect):
@@ -100,7 +100,7 @@ def main():
     wal_segment_size = ['16', '32', '64', '128', '256', '512', '1024']              # List of WAL sizes
     connect_count = ['2', '4', '8', '16', '32', '64', '128', '256', '512']          # List of connections
 
-    transactions_count = 1000               # Total transaction count for all test cases
+    transactions_count = 10000               # Total transaction count for all test cases
     tests_count = 2                         # Total test count for one case
 
     file_path = './many_connections/many_connections_data/logfile.txt'
