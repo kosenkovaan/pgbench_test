@@ -35,7 +35,7 @@ class Test():
     def benchmark(self):
         subprocess.call(['sudo', 'i', '-u', 'postgres', self.bin_path + 'psql', '-c', 'CHECKPOINT'])
         subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-i', 'benchmark'])
-        with open('./many_connections/many_connections_data/many_conn_test' + self.wal_segment_size + '.txt', 'a') as outputfile:
+        with open('/home/kosenkovaan/python_projects/pgbench_test-1/many_connections/many_connections_data/many_conn_test' + self.wal_segment_size + '.txt', 'a') as outputfile:
             subprocess.call(['sudo', '-u', 'postgres', self.bin_path + 'pgbench', '-t', self.transaction_count, '-c', self.connect_count, 'benchmark'], stdout=outputfile)
 
     def stop_server(self):
@@ -64,7 +64,7 @@ def test_case(bin_path, data_directory_path, transaction_count, test_number, seg
     #pass
 
 def logging(test, segment_size, connect):
-    with open('./many_connections/many_connections_data/logfile.txt', 'a') as file:
+    with open('/home/kosenkovaan/python_projects/pgbench_test-1/many_connections/many_connections_data/logfile.txt', 'a') as file:
         file.write('\nTest:' + test + ', Segment size:' + segment_size + ', Connect:' + connect)
 
 def read_log(file_path):
@@ -103,7 +103,7 @@ def main():
     transactions_count = 10000               # Total transaction count for all test cases
     tests_count = 2                         # Total test count for one case
 
-    file_path = './many_connections/many_connections_data/logfile.txt'
+    file_path = '/home/kosenkovaan/python_projects/pgbench_test-1/many_connections/many_connections_data/logfile.txt'
 
     if is_file_empty(file_path):
         start_index_test = 1
